@@ -1,0 +1,15 @@
+# Blueprint для деплоя на Render: https://render.com/docs/blueprint-spec
+# В дашборде Render: New -> Blueprint -> выбрать этот репозиторий.
+services:
+  - type: web
+    name: dragon-academy-api
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /health
+    envVars:
+      # Ключ подписи JWT — генерируется случайно при создании сервиса
+      - key: SECRET_KEY
+        generateValue: true
+      # API_KEY намеренно не задаём: песочница учебная,
+      # демо-ключ sky-fire-9000 описан в документации API
