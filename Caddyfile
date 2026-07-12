@@ -1,0 +1,6 @@
+# DOMAIN подставляется из docker-compose:
+#   :80            — обычный HTTP по IP-адресу (домена нет)
+#   api.example.com — Caddy сам получит и будет продлевать сертификат Let's Encrypt
+{$DOMAIN} {
+	reverse_proxy api:8000
+}

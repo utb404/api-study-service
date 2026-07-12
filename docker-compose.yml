@@ -1,0 +1,32 @@
+services:
+  api:
+    build: .
+    restart: unless-stopped
+    environment:
+      SECRET_KEY: ${SECRET_KEY:?Задайте SECRET_KEY в .env (или запустите ./deploy.sh)}
+      API_KEY: ${API_KEY:-sky-fire-9000}
+      # База лежит на именованном volume и переживает пересборку контейнера
+      DATABASE_URL: sqlite:////data/academy.db
+    volumes:
+      - academy-data:/data
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      # Домен для HTTPS; без домена — просто HTTP на 80 порту
+      DOMAIN: ${DOMAIN:-:80}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - api
+
+volumes:
+  academy-data:
+  caddy-data:
+  caddy-config:

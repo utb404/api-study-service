@@ -31,6 +31,33 @@ docker build -t dragon-academy-api .
 docker run -p 8000:8000 dragon-academy-api
 ```
 
+### Деплой на VPS с Ubuntu (две команды)
+
+На свежем сервере (Ubuntu/Debian) под root или пользователем с sudo:
+
+```bash
+git clone https://github.com/utb404/api-study-service.git && cd api-study-service
+./deploy.sh
+```
+
+Скрипт сам установит Docker (если его нет), сгенерирует случайный `SECRET_KEY`
+в `.env` и поднимет два контейнера: приложение и reverse-proxy Caddy.
+API будет доступно по `http://IP-сервера/docs`.
+
+Если у вас есть домен, направленный на сервер, — запустите с ним,
+и Caddy автоматически получит HTTPS-сертификат Let's Encrypt:
+
+```bash
+DOMAIN=api.example.com ./deploy.sh
+```
+
+Полезное:
+
+- база лежит на Docker-volume `academy-data` и переживает пересборки;
+- обновление: `git pull && ./deploy.sh`;
+- логи: `docker compose logs -f`; остановка: `docker compose down`;
+- не забудьте firewall: `ufw allow 22,80,443/tcp && ufw enable`.
+
 ### Деплой на Render (бесплатно)
 
 В репозитории есть `render.yaml` (Blueprint), поэтому деплой сводится к трём шагам:
